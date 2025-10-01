@@ -21,6 +21,16 @@
         overflow: hidden; /* 넘치는 부분 숨김 */
         text-overflow: ellipsis; /* 넘친 텍스트를 ...(ellipsis:생략 부호)으로 표시 */
       }
+
+      ul,
+      li {
+        list-style: none;
+        padding: 0;
+      }
+
+      a {
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
@@ -32,10 +42,7 @@
           type="text"
           class="form-control"
           placeholder="enter a keyword"
-          <!--
-          value="소하1동 날씨"
-          --
-        />
+          value="손흥민"
         />
         <button
           class="btn btn-secondary"
@@ -70,6 +77,27 @@
     <script>
       const searchtextElm = document.getElementById("searchtext");
       const resultElm = document.getElementById("searchResult");
+
+      function getDateTimeStr(dateStr) {
+        const date = new Date(dateStr);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+        const dd = String(date.getDate()).padStart(2, "0");
+        const hh = String(date.getHours()).padStart(2, "0");
+        const min = String(date.getMinutes()).padStart(2, "0");
+        const ss = String(date.getSeconds()).padStart(2, "0");
+
+        return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
+      }
+      function getDateStr(dateStr) {
+        const date = new Date(dateStr);
+        const yyyy = date.getFullYear();
+        const mm = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+        const dd = String(date.getDate()).padStart(2, "0");
+
+        return `${yyyy}-${mm}-${dd}`;
+      }
+
       function Search(e) {
         if (e) e.preventDefault(); // 기본 제출 동작 막기
 
@@ -79,28 +107,31 @@
         getkakaosearch(txt).then((dt) => {
           const docs = dt.documents;
           console.log(dt);
-
           let str = "";
           docs.forEach((item) => {
-            const date = new Date(item.datetime);
-            const formatted = `${date.getFullYear()}년 ${
-              date.getMonth() + 1
-            }월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분`;
             str += `
-          <li class="list-group-item list-group-item-action">
-            <h5>
-              <a href="${item.url}" target="_blank" class="nav-link ellipsis" title="${item.title}">${item.title}</a>
-            </h5>
-            <p>${item.contents}</p>
-            <div class="text-end">
-            <small class="text-muted">${formatted}</small>
-            </div>
-          </li>
-            `;
-            resultElm.innerHTML = str;
+                <li class="list-group-item list-group-item-action mb-3">
+                  <h5>
+                    <a href="${
+                      item.url
+                    }" target="_blank" class="nav-link ellipsis" title="${
+              item.title
+            }">${item.title}</a></h5>
+                  <p>
+                    <a href="${
+                      item.url
+                    }" target="_blank" class="nav-link text-dark">${
+              item.contents
+            }</a>
+                  </p>
+                  <div class="text-end">
+                  <small class="text-muted">${getDateStr(item.datetime)}</small>
+                  </div>
+                </li>
+                  `;
           });
+          resultElm.innerHTML = str;
         });
-
         return false;
       }
 
