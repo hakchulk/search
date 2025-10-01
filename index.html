@@ -90,12 +90,36 @@
         return `${yyyy}-${mm}-${dd} ${hh}:${min}:${ss}`;
       }
       function getDateStr(dateStr) {
-        const date = new Date(dateStr);
-        const yyyy = date.getFullYear();
-        const mm = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
-        const dd = String(date.getDate()).padStart(2, "0");
+        return dateStr.slice(0, 10) + " " + dateStr.slice(11, 19);
+        // const date = new Date(dateStr);
+        // const yyyy = date.getFullYear();
+        // const mm = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+        // const dd = String(date.getDate()).padStart(2, "0");
 
-        return `${yyyy}-${mm}-${dd}`;
+        // return `${yyyy}-${mm}-${dd}`;
+      }
+
+      function getSearchRow(item) {
+        return `<li class="list-group-item list-group-item-action mb-3 border-top rounded-2">
+                  <h5 class="fw-bold text-dark">
+                    <a href="${
+                      item.url
+                    }" target="_blank" class="nav-link ellipsis" title="${
+          item.title
+        }">${item.title}</a></h5>
+                  <p>
+                    <a href="${
+                      item.url
+                    }" target="_blank" class="nav-link text-dark">${
+          item.contents
+        }</a>
+                  </p>
+                  <p class="text-end small mb-0">
+                    ${getDateStr(item.datetime)}
+                  </p>
+            </li>`;
+        // Bootstrap은 <p> 태그에 기본적으로 아래쪽 마진을 설정.
+        // mb-0 추가하여 아래쪽 마진을 제거
       }
 
       function Search(e) {
@@ -109,26 +133,7 @@
           console.log(dt);
           let str = "";
           docs.forEach((item) => {
-            str += `
-                <li class="list-group-item list-group-item-action mb-3 border-top rounded-2">
-                  <h5 class="fw-bold text-dark">
-                    <a href="${
-                      item.url
-                    }" target="_blank" class="nav-link ellipsis" title="${
-              item.title
-            }">${item.title}</a></h5>
-                  <p>
-                    <a href="${
-                      item.url
-                    }" target="_blank" class="nav-link text-dark">${
-              item.contents
-            }</a>
-                  </p>
-                  <div class="text-end">
-                  <small class="text-muted">${getDateStr(item.datetime)}</small>
-                  </div>
-                </li>
-                  `;
+            str += getSearchRow(item);
           });
           resultElm.innerHTML = str;
         });
