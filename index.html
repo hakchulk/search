@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <!-- <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css"
+      integrity="sha512-2bBQCjcnw658Lho4nlXJcc6WkV/UxpE/sAokbXPxQNGqmNdQrWqtw26Ns9kFF/yG792pKR1Sx8/Y1Lf1XN4GKA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    /> -->
+
+    <script src="js/axios.min.js"></script>
+
+    <style>
+      .ellipsis {
+        white-space: nowrap; /* 줄바꿈 없이 한 줄로 유지 */
+        overflow: hidden; /* 넘치는 부분 숨김 */
+        text-overflow: ellipsis; /* 넘친 텍스트를 ...(ellipsis:생략 부호)으로 표시 */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h4 class="py-2" style="text-align: center">다음 검색</h4>
+      <form class="d-flex gap-2 py-2" id="searchform" onsubmit="Search(event);">
+        <input
+          id="searchtext"
+          type="text"
+          class="form-control"
+          placeholder="enter a keyword"
+          value="소하1동 날씨"
+        />
+        <button
+          class="btn btn-secondary"
+          style="width: 5rem"
+          onclick="Search(event);"
+        >
+          검색
+        </button>
+      </form>
+
+      <div class="row">
+        <ul id="searchResult" class="list-group">
+          <li class="list-group-item list-group-item-action">
+            <h4>
+              <a href="" target="_blank" class="nav-link"
+                >소하1동 새마을지도자협의회·부녀회, ‘탄소중립 실천 캠페인’
+                실시</a
+              >
+            </h4>
+            <p>
+              11일 소하1동 행정복지센터와 한내천 공원 일대에서 ‘탄소중립 실천
+              캠페인’을 진행했다. 이날 캠페인에는 회원 20여명이 참여해
+              주민들에게 생활 속 탄소중립의 필요성과 실천 방법을 알리고 참여를
+              독려했다...
+            </p>
+            <small class="text-muted">2023.09.28</small>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script>
+      const searchtextElm = document.getElementById("searchtext");
+      const resultElm = document.getElementById("searchResult");
+      function Search(e) {
+        if (e) e.preventDefault(); // 기본 제출 동작 막기
+
+        const txt = searchtextElm.value;
+        console.log(txt);
+
+        getkakaosearch(txt).then((dt) => {
+          const docs = dt.documents;
+          console.log(dt);
+
+          let str = "";
+          docs.forEach((item) => {
+            const date = new Date(item.datetime);
+            const formatted = `${date.getFullYear()}년 ${
+              date.getMonth() + 1
+            }월 ${date.getDate()}일 ${date.getHours()}시 ${date.getMinutes()}분`;
+            str += `
+          <li class="list-group-item list-group-item-action">
+            <h5>
+              <a href="${item.url}" target="_blank" class="nav-link ellipsis" title="${item.title}">${item.title}</a>
+            </h5>
+            <p>${item.contents}</p>
+            <div class="text-end">
+            <small class="text-muted">${formatted}</small>
+            </div>
+          </li>
+            `;
+            resultElm.innerHTML = str;
+          });
+        });
+
+        return false;
+      }
+
+      async function getkakaosearch(qr) {
+        try {
+          const res = await axios.get("https://dapi.kakao.com/v2/search/web", {
+            headers: {
+              Authorization: "KakaoAK cafd059ab750c375164a71a01c72c9a2",
+            },
+            params: { query: qr, size: 10 },
+          });
+
+          const dt = res.data;
+          return dt;
+        } catch (error) {}
+      }
+    </script>
+  </body>
+</html>
