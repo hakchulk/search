@@ -86,10 +86,10 @@
       const resultElm = document.getElementById("searchResult");
 
       let page = 1;
-      let listCnt = 5;
-      let pagerCnt = 10; // 페이저 그룹에 나타날 페이지 갯수
-      let totalRec = 0;
-      let totalPages = 0;
+      const listCnt = 5;
+      const pagerCnt = 10; // 페이저 그룹에 나타날 페이지 갯수
+      // let totalRec = 0;
+      // let totalPages = 0;
 
       function getDateStr(dateStr) {
         return dateStr.slice(0, 10) + " · " + dateStr.slice(11, 16);
@@ -104,7 +104,8 @@
           item.title
         }">${item.title}</a></h5>
                   <div class="d-flex gap-3">
-                    <img src="${item.thumbnail}" class="rounded-2" />
+                  <a href="${item.url}" target="_blank">
+                    <img src="${item.thumbnail}" class="rounded-2" /></a>
                     <div>
                     <p>
                       <a href="${
