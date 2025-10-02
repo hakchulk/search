@@ -103,16 +103,21 @@
                     }" target="_blank" class="nav-link ellipsis" title="${
           item.title
         }">${item.title}</a></h5>
-                  <p>
-                    <a href="${
-                      item.url
-                    }" target="_blank" class="nav-link text-dark">${
+                  <div class="d-flex gap-3">
+                    <img src="${item.thumbnail}" class="rounded-2" />
+                    <div>
+                    <p>
+                      <a href="${
+                        item.url
+                      }" target="_blank" class="nav-link text-dark">${
           item.contents
         }</a>
-                  </p>
-                  <p class="text-end small mb-0">
-                    ${getDateStr(item.datetime)}
-                  </p>
+                    </p>
+                    <p class="text-end small mb-0">
+                      ${getDateStr(item.datetime)}
+                    </p>
+                    </div>
+                  </div>
             </li>`;
         // Bootstrap은 <p> 태그에 기본적으로 아래쪽 마진을 설정.
         // mb-0 추가하여 아래쪽 마진을 제거
@@ -183,7 +188,7 @@
 
       async function getkakaosearch(qr) {
         try {
-          const res = await axios.get("https://dapi.kakao.com/v2/search/web", {
+          const res = await axios.get("https://dapi.kakao.com/v2/search/blog", {
             headers: {
               Authorization: "KakaoAK cafd059ab750c375164a71a01c72c9a2",
             },
